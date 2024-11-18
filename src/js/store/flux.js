@@ -1,45 +1,89 @@
-const getState = ({ getStore, getActions, setStore }) => {
-	return {
-		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
-		},
-		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+const getState = ({ getStore, setStore }) => {
+    return {
+        store: {
+            characters: [],
+            vehicles: [],
+            planets: [],
+            favorites: []
+        },
+        actions: {
+            // Fetch de personajes
+            getCharacters: () => {
+                fetch("https://www.swapi.tech/api/people")
+                    .then(response => response.json())
+                    .then(data => {
+                        setStore({ characters: data.results });
+                    })
+                    .catch(error => console.error("Error al recuperar personajes:", error));
+            },
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+            // Fetch de vehículos
+            getVehicles: () => {
+                fetch("https://www.swapi.tech/api/vehicles")
+                    .then(response => response.json())
+                    .then(data => {
+                        setStore({ vehicles: data.results });
+                    })
+                    .catch(error => console.error("Error al recuperar vehiculos:", error));
+            },
 
-				//reset the global store
-				setStore({ demo: demo });
-			}
-		}
-	};
+            // Fetch de planetas
+            getPlanets: () => {
+                fetch("https://www.swapi.tech/api/planets")
+                    .then(response => response.json())
+                    .then(data => {
+                        setStore({ planets: data.results });
+                    })
+                    .catch(error => console.error("Error al recuperar plantetas:", error));
+            },
+
+            // Fetch de detalles de personaje
+            getCharacterDetail: (id) => {
+                return fetch(`https://www.swapi.tech/api/people/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        return data.result.properties;
+                    })
+                    .catch(error => console.error("Error detalles personajes:", error));
+            },
+
+            // Fetch de detalles de planeta
+            getPlanetDetail: (id) => {
+                return fetch(`https://www.swapi.tech/api/planets/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        return data.result.properties;
+                    })
+                    .catch(error => console.error("Error fetching planet details:", error));
+            },
+            
+            // Fetch de detalles de vehicle
+            getVehicleDetail: (id) => {
+                return fetch(`https://www.swapi.tech/api/vehicles/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        return data.result.properties;
+                    })
+                    .catch(error => console.error("Error fetching vehicle details:", error));
+            },
+            
+
+            // Funcionalidad de favoritos
+            toggleFavorite: (item) => {
+                const store = getStore();
+                console.log(item);
+                
+                const isFavorite = store.favorites.some(fav => fav.uid === item.uid && fav.name == item.name);
+                if (isFavorite) {
+                    const newfavorite= store.favorites.filter(fav => fav.uid == item.uid && fav.name !== item.name)
+                    setStore({ favorites: newfavorite});
+                    console.log(newfavorite);
+                } else {
+                    setStore({ favorites: [...store.favorites, item] });
+                }
+            }
+        }
+    };
 };
 
 export default getState;
