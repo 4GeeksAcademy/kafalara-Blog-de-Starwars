@@ -75,7 +75,7 @@ const getState = ({ getStore, setStore }) => {
                 
                 const isFavorite = store.favorites.some(fav => fav.uid === item.uid && fav.name == item.name);
                 if (isFavorite) {
-                    const newfavorite= store.favorites.filter(fav => fav.uid == item.uid && fav.name !== item.name)
+                    const newfavorite= store.favorites.filter(fav => fav.uid !== item.uid | fav.name !== item.name)
                     setStore({ favorites: newfavorite});
                     console.log(newfavorite);
                 } else {

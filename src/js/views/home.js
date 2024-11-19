@@ -34,9 +34,12 @@ export const Home = () => {
                                     </Link>
                                     <button
                                         className="btn btn-outline-warning"
+
                                         onClick={() => actions.toggleFavorite(character)}
                                     >
-                                        ❤️
+                                        {
+                                            store.favorites.includes(character)?<i class="fa-solid fa-heart"></i>:"❤️"
+                                        }
                                     </button>
                                 </div>
                             </div>
@@ -69,7 +72,9 @@ export const Home = () => {
                                         className="btn btn-outline-warning"
                                         onClick={() => actions.toggleFavorite(vehicle)}
                                     >
-                                        ❤️
+                                        {
+                                            store.favorites.includes(vehicle)?<i class="fa-solid fa-heart"></i>:"❤️"
+                                        }                                    
                                     </button>
                                 </div>
                             </div>
@@ -104,7 +109,9 @@ export const Home = () => {
                                         className="btn btn-outline-warning"
                                         onClick={() => actions.toggleFavorite(planet)}
                                     >
-                                        ❤️
+                                        {
+                                            store.favorites.includes(planet)?<i class="fa-solid fa-heart"></i>:"❤️"
+                                        }
                                     </button>
                                 </div>
                             </div>
